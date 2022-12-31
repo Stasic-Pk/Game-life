@@ -1,18 +1,29 @@
 var canvas = document.getElementById('game-life')
 var ctx = canvas.getContext('2d')
+document.oncontextmenu = function() {
+  return false;
+}
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let cells = []
-const w = 100
-const s = 5
+let s
+let int = 10
 
-for (let c = 0; c < w; c++) {
+if (window.innerWidth > window.innerHeight) {
+  s = Math.round(window.innerWidth / window.innerHeight * int)
+} else {
+  s = Math.round(window.innerHeight / window.innerWidth * 2.5)
+}
+const w = Math.floor(window.innerWidth / s)
+const h = Math.floor(window.innerHeight / s)
+
+for (let c = 0; c < h; c++) {
   for (let s = 0; s < w; s++) {
     cells.push(
       {
-        life: Math.round(Math.random() - 0.355),
+        life: Math.round(Math.random() - 0.32),
         string: s,
         colum: c,
         neighborhood: 0,
@@ -23,17 +34,6 @@ for (let c = 0; c < w; c++) {
 }
 
 function game() {
-  ctx.fillStyle = 'white'
-  ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
-  for (let i = 0; i < cells.length; i++) {
-    if (cells[i].life == 1) {
-      ctx.fillStyle = 'black'
-      ctx.fillRect(cells[i].string * s, cells[i].colum * s, s, s)
-    } else {
-      ctx.fillStyle = 'white'
-      ctx.fillRect(cells[i].string * s, cells[i].colum * s, s, s)
-    }
-  }
   for (let i = 0; i < cells.length; i++) {
     let ia = i - 1
     let is = i + 1
@@ -60,6 +60,21 @@ function game() {
   for (let i = 0; i < cells.length; i++) {
     cells[i].neighborhood = 0
   }
+  ctx.fillStyle = 'white'
+  ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
+  for (let i = 0; i < cells.length; i++) {
+    if (cells[i].life == 1) {
+      ctx.fillStyle = 'black'
+      ctx.fillRect(cells[i].string * s, cells[i].colum * s, s, s)
+    } else {
+      ctx.fillStyle = 'white'
+      ctx.fillRect(cells[i].string * s, cells[i].colum * s, s, s)
+    }
+  }
 }
 
-setInterval(game, 1);
+
+
+addEventListener('contextmenu', function start() {
+  game()
+})
